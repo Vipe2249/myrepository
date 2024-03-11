@@ -2,9 +2,9 @@
 session_start();
 require_once('../db/dbcon.php');
 
-// Function to remove an item from the cart by SKU
+
 function removeItemFromCart($con, $sku) {
-    // Sanitize input
+
     $product_sku = mysqli_real_escape_string($con, $sku);
     
     if(isset($_SESSION['cart'][$product_sku])) {
@@ -13,30 +13,30 @@ function removeItemFromCart($con, $sku) {
 }
 
 if(isset($_GET['add-to-cart'])) {
-    // Get the SKU of the product to add to cart
+
     $product_sku = $_GET['add-to-cart'];
     
-    // Fetch the product details from the database
+
     $query = "SELECT * FROM products WHERE sku = ?";
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $product_sku);
     $stmt->execute();
-    $stmt->bind_result($sku, $name, $price, $image_url); // Bind result variables
+    $stmt->bind_result($sku, $name, $price, $image_url); 
     $stmt->fetch();
     $stmt->close();
     
     if($sku) {
-        // Check if the product is already in the cart
+
         if(isset($_SESSION['cart'][$sku])) {
-            // If the product is already in the cart, increase its quantity
+
             $_SESSION['cart'][$sku]['quantity']++;
         } else {
-            // If the product is not in the cart, add it to the cart
+
             $_SESSION['cart'][$sku] = array(
                 'name' => $name,
                 'price' => $price,
                 'quantity' => 1,
-                'image_url' => $image_url // Add image_url to the cart
+                'image_url' => $image_url 
             );
         }
     }
@@ -49,21 +49,21 @@ if(isset($_SESSION['cart'])) {
     }
 }
 
-// Check if category URL is present in the URL
+
 if(isset($_GET['url'])) {
     $category_url = $_GET['url'];
     
-    // Fetch the category details from the database based on URL
+
     $query_category = "SELECT * FROM categories WHERE url = ?";
     $stmt_category = $con->prepare($query_category);
     $stmt_category->bind_param("s", $category_url);
     $stmt_category->execute();
-    $stmt_category->bind_result($category_id, $category_name, $category_url, $parent_id, $image_url); // Bind result variables
+    $stmt_category->bind_result($category_id, $category_name, $category_url, $parent_id, $image_url); 
     $stmt_category->fetch();
     $stmt_category->close();
     
     if($category_id) {
-        // Fetch products belonging to the selected category including child categories
+
         $query_products = "SELECT p.* FROM products p
                            INNER JOIN categories c ON p.category_id = c.id
                            WHERE c.id = ? OR c.parent_id = ?";
@@ -72,19 +72,18 @@ if(isset($_GET['url'])) {
         $stmt_products->execute();
         $result_products = $stmt_products->get_result();
         
-        // Check if the selected category has child categories
+
         $query_child_categories = "SELECT * FROM categories WHERE parent_id = ?";
         $stmt_child_categories = $con->prepare($query_child_categories);
         $stmt_child_categories->bind_param("i", $category_id);
         $stmt_child_categories->execute();
         $result_child_categories = $stmt_child_categories->get_result();
     } else {
-        // Handle invalid category URL
+
         echo "Category not found.";
         exit;
     }
 } else {
-    // Handle missing category URL
     echo "Category URL is missing.";
     exit;
 }
