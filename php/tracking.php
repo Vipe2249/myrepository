@@ -115,14 +115,14 @@ if(isset($_SESSION['cart'])) {
 <?php include("../header/footer.php");?>
 
 <script>
-    // Function to fetch shipment tracking information with provider ID
+
     function getShipmentTracking(trackingReference, providerId) {
         const endpoint = `https://api.shiplogic.com/v2/tracking/shipments?tracking_reference=${trackingReference}&provider_id=${providerId}`;
 
         fetch(endpoint)
             .then(response => response.json())
             .then(data => {
-                // Handle shipment tracking data
+
                 handleShipmentTracking(data);
             })
             .catch(error => {
@@ -130,14 +130,13 @@ if(isset($_SESSION['cart'])) {
             });
     }
 
-    // Function to handle shipment tracking data
+
     function handleShipmentTracking(trackingData) {
-        // Check if shipments are returned
+
         if (trackingData.shipments && trackingData.shipments.length > 0) {
-            // Assuming you want to handle only the first shipment in the response
+
             const shipment = trackingData.shipments[0];
 
-            // Display basic shipment information
             const shipmentInfoContainer = document.getElementById('shipment-info');
             shipmentInfoContainer.innerHTML = `
                 <p>Shipment ID: ${shipment.shipment_id}</p>
@@ -164,7 +163,7 @@ if(isset($_SESSION['cart'])) {
             console.log("No tracking events found for this shipment.");
         }
         
-        // Check for proof of delivery images
+
         if (shipment.tracking_events) {
             shipment.tracking_events.forEach(event => {
                 if (event.message === "POD files captured" && event.data && event.data.images) {
@@ -178,25 +177,25 @@ if(isset($_SESSION['cart'])) {
             });
         }
 
-            // Display tracking events
-            if (shipment.tracking_events && shipment.tracking_events.length > 0) {
-                const latestEvent = shipment.tracking_events[0]; // Get the latest event
-                const eventStatus = latestEvent.status; // Get the status of the latest event
 
-                // Set bar colors based on event status
+            if (shipment.tracking_events && shipment.tracking_events.length > 0) {
+                const latestEvent = shipment.tracking_events[0]; 
+                const eventStatus = latestEvent.status; 
+
+
                 const bars = document.querySelectorAll('.innerbar > .bar');
 
                 const checkmark = document.querySelectorAll('.checkmark');
 
-                // Reset bar colors
+
                 bars.forEach(bar => {
                     bar.style.backgroundColor = 'white';
                 });
 
-                // Set bar colors based on event status
+
                 switch (eventStatus) {
                     case 'submitted':
-                        bars[0].style.backgroundColor = 'black'; // Update the color of the first bar
+                        bars[0].style.backgroundColor = 'black';
                         checkmark[0].style.visibility = 'unset'; 
                         break;
                     case 'collected':
@@ -242,23 +241,23 @@ if(isset($_SESSION['cart'])) {
                 console.log("No tracking events found for this shipment.");
             }
             
-            // Set display property of tracking results to unset
+
             document.querySelector('.tracking-results').style.display = 'unset';
         } else {
             console.log("No shipments found for the provided tracking reference.");
         }
     }
 
-    // Submit form listener
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Add event listener to the form
+
         const form = document.querySelector('.shipment-tracking form');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             const input = document.querySelector('.tracking-input input');
             const trackingReference = input.value;
-            const providerId = '10'; // Replace 'your_provider_id_here' with the actual provider ID
+            const providerId = '10'; 
             getShipmentTracking(trackingReference, providerId);
         });
     });
