@@ -21,17 +21,13 @@
                 </div>
                 <div class="footer-item" id="last">
                     <strong>Contact Us</strong>
-                        <p>083 725 1683<i class="fa-solid fa-phone footer-icon"></i></p>
-                        <p>sales@infinityware.co.za<i class="fa-solid fa-envelope footer-icon"></i></p>
+                        <p><i class="fa-solid fa-phone footer-icon"></i></p>
+                        <p><i class="fa-solid fa-envelope footer-icon"></i></p>
                         <div class="contact">
                             <div class="contact-icon">
                             <i class="fa-solid fa-shop footer-icon"></i>
                             </div>
                             <div class="contact-address">
-                        <p>Sandpebbles Estate, Kipling House, Chelsea Road</p>
-                        <p>Theescombe</p>
-                        <p>Gqeberha</p>
-                        <p>6070</p>
                         </div>
                         </div>
                 </div>
