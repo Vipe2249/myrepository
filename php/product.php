@@ -10,34 +10,33 @@ if(isset($_GET['url'])) {
     if(mysqli_num_rows($result) > 0) {
         $product = mysqli_fetch_assoc($result);
     } else {
-        // Product not found, handle error
     }
 } else {
-    // No product SKU provided, handle error
+
 }
 
 if(isset($_GET['add-to-cart'])) {
-    // Get the SKU of the product to add to cart
+
     $product_sku = $_GET['add-to-cart'];
     
-    // Fetch the product details from the database
+
     $query = "SELECT * FROM products WHERE sku = '$product_sku'";
     $result = mysqli_query($con, $query);
     
     if(mysqli_num_rows($result) > 0) {
         $product = mysqli_fetch_assoc($result);
         
-        // Check if the product is already in the cart
+
         if(isset($_SESSION['cart'][$product_sku])) {
-            // If the product is already in the cart, increase its quantity
+
             $_SESSION['cart'][$product_sku]['quantity']++;
         } else {
-            // If the product is not in the cart, add it to the cart
+
             $_SESSION['cart'][$product_sku] = array(
                 'name' => $product['name'],
                 'price' => $product['price'],
                 'quantity' => 1,
-                'image_url' => $product['image_url'] // Add image_url to the cart
+                'image_url' => $product['image_url'] 
             );
         }
     }
@@ -46,7 +45,6 @@ if(isset($_GET['add-to-cart'])) {
 $query = "SELECT * FROM products";
 $result = mysqli_query($con, $query);
 
-// Calculate total quantity in the cart
 $total_quantity = 0;
 if(isset($_SESSION['cart'])) {
     foreach($_SESSION['cart'] as $item) {
@@ -126,17 +124,17 @@ if(isset($_SESSION['cart'])) {
     <?php include("../header/footer.php");?>
     <script>
         function showTab(tabName) {
-            // Hide all tabs
+
             var tabs = document.querySelectorAll('.product-page-description-article');
             tabs.forEach(function(tab) {
                 tab.style.display = 'none';
             });
 
-            // Show the selected tab
+
             document.getElementById(tabName + '-tab').style.display = 'block';
         }
 
-        // Prevent default behavior of anchor tags
+
         var anchorTags = document.querySelectorAll('.product-description-buttons a');
         anchorTags.forEach(function(tag) {
             tag.addEventListener('click', function(event) {
