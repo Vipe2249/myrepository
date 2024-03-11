@@ -2,15 +2,15 @@
 session_start();
 require_once('../db/dbcon.php');
 
-// Check if 'add-to-cart' parameter is present in the URL
+
 if(isset($_GET['add-to-cart'])) {
-    // Get the SKU of the product to add to cart
+
     $product_sku = $_GET['add-to-cart'];
     
-    // Sanitize the input
+
     $product_sku = mysqli_real_escape_string($con, $product_sku);
     
-    // Fetch the product details from the database using prepared statements
+
     $query = "SELECT * FROM products WHERE sku = ?";
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $product_sku);
@@ -20,23 +20,23 @@ if(isset($_GET['add-to-cart'])) {
     if($result->num_rows > 0) {
         $product = $result->fetch_assoc();
         
-        // Check if the product is already in the cart
+
         if(isset($_SESSION['cart'][$product_sku])) {
-            // If the product is already in the cart, increase its quantity
+
             $_SESSION['cart'][$product_sku]['quantity']++;
         } else {
-            // If the product is not in the cart, add it to the cart
+
             $_SESSION['cart'][$product_sku] = array(
                 'name' => $product['name'],
                 'price' => $product['price'],
                 'quantity' => 1,
-                'image_url' => $product['image_url'] // Add image_url to the cart
+                'image_url' => $product['image_url'] 
             );
         }
     }
 }
 
-// Fetch products with stock greater than 0 using prepared statements
+
 $query = "SELECT * FROM products WHERE stock > ?";
 $stock_limit = 0;
 $stmt = $con->prepare($query);
@@ -44,7 +44,7 @@ $stmt->bind_param("i", $stock_limit);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Calculate total quantity in the cart
+
 $total_quantity = 0;
 if(isset($_SESSION['cart'])) {
     foreach($_SESSION['cart'] as $item) {
@@ -122,15 +122,15 @@ if(isset($_SESSION['cart'])) {
                 clickable: true,
             },
             breakpoints: {
-                // when window width is <= 0px
+
                 0: {
                     slidesPerView: 2,
                 },
-                // when window width is <= 768px
+
                 700: {
                     slidesPerView: 3,
                 },
-                // when window width is <= 992px
+
                 992: {
                     slidesPerView: 5,
                 },
