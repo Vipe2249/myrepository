@@ -3,12 +3,12 @@ session_start();
 
 require_once('../db/dbcon.php');
 
-// Check if 'add-to-cart' parameter is present in the URL
+
 if(isset($_GET['add-to-cart'])) {
-    // Get the SKU of the product to add to cart
+
     $product_sku = $_GET['add-to-cart'];
     
-    // Fetch the product details from the database
+
     $query = "SELECT * FROM products WHERE sku = ?";
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $product_sku);
@@ -18,22 +18,22 @@ if(isset($_GET['add-to-cart'])) {
     if($result->num_rows > 0) {
         $product = $result->fetch_assoc();
         
-        // Check if the product is already in the cart
+
         if(isset($_SESSION['cart'][$product_sku])) {
-            // If the product is already in the cart, increase its quantity
+
             $_SESSION['cart'][$product_sku]['quantity']++;
         } else {
-            // If the product is not in the cart, add it to the cart
+
             $_SESSION['cart'][$product_sku] = array(
                 'name' => $product['name'],
                 'price' => $product['price'],
                 'quantity' => 1,
-                'image_url' => $product['image_url'] // Add image_url to the cart
+                'image_url' => $product['image_url'] 
             );
         }
     }
 }
-// Calculate total quantity in the cart
+
 $total_quantity = 0;
 if(isset($_SESSION['cart'])) {
     foreach($_SESSION['cart'] as $item) {
