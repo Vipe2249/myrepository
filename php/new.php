@@ -1,20 +1,16 @@
 <?php
 
 session_start();
-/**
- * @param array $data
- * @param null $passPhrase
- * @return string
- */
+
 function generateSignature($data, $passPhrase = null) {
-    // Create parameter string
+
     $pfOutput = '';
     foreach( $data as $key => $val ) {
         if($val !== '') {
             $pfOutput .= $key .'='. urlencode( trim( $val ) ) .'&';
         }
     }
-    // Remove last ampersand
+
     $getString = substr( $pfOutput, 0, -1 );
     if( $passPhrase !== null ) {
         $getString .= '&passphrase='. urlencode( trim( $passPhrase ) );
@@ -22,23 +18,23 @@ function generateSignature($data, $passPhrase = null) {
     return md5( $getString );
 } 
 
-// here
+
 
 $cartTotal = $total;
 $passphrase = 'jt7NOE43FZPn';
 $data = array(
-    // Merchant details
+
     'merchant_id' => '10000100',
     'merchant_key' => '46f0cd694581a',
     'return_url' => 'http://www.yourdomain.co.za/return.php',
     'cancel_url' => 'http://www.yourdomain.co.za/cancel.php',
     'notify_url' => 'http://www.yourdomain.co.za/notify.php',
-    // Buyer details
+
     'name_first' => 'First Name',
     'name_last'  => 'Last Name',
     'email_address'=> 'test@test.com',
-    // Transaction details
-    'm_payment_id' => '1234', //Unique payment ID to pass through to notify_url
+
+    'm_payment_id' => '1234', 
     'amount' => number_format( sprintf( '%.2f', $cartTotal ), 2, '.', '' ),
     'item_name' => 'Order#123'
 );
@@ -46,7 +42,7 @@ $data = array(
 $signature = generateSignature($data, $passphrase);
 $data['signature'] = $signature;
 
-// If in testing mode make use of either sandbox.payfast.co.za or www.payfast.co.za
+
 $testingMode = true;
 $pfHost = $testingMode ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
 $htmlForm = '<form action="https://'.$pfHost.'/eng/process" method="post">';
@@ -115,23 +111,23 @@ function getFormData() {
         },
         parcels: [
             {
-                submitted_length_cm: 42.5, // You might need to capture this data from the form if available
-                submitted_width_cm: 38.5, // You might need to capture this data from the form if available
-                submitted_height_cm: 5.5, // You might need to capture this data from the form if available
-                submitted_weight_kg: 3 // You might need to capture this data from the form if available
+                submitted_length_cm: 42.5, 
+                submitted_width_cm: 38.5, 
+                submitted_height_cm: 5.5, 
+                submitted_weight_kg: 3 
             }
         ],
-        declared_value: 1500, // You might need to capture this data from the form if available
-        collection_min_date: "2021-05-21", // You might need to capture this data from the form if available
-        delivery_min_date: "2021-05-21" // You might need to capture this data from the form if available
+        declared_value: 1500, 
+        collection_min_date: "2021-05-21", 
+        delivery_min_date: "2021-05-21" 
     };
 }
 
-// Function to make the API request
+
 function getShippingRates() {
     const formData = getFormData();
     const apiUrl = "https://api.shiplogic.com/v2/rates";
-    const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; // Change this to your actual bearer token
+    const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; 
 
     fetch(apiUrl, {
         method: "POST",
@@ -143,17 +139,16 @@ function getShippingRates() {
     })
     .then(response => response.json())
     .then(data => {
-        // Handle the response data here
+
         console.log(data);
 
-        // Extract the rate from the response
-        const rate = data.rates[0].rate; // Assuming there's only one rate in the array
+
+        const rate = data.rates[0].rate; 
         document.querySelector(".summary-shipping").innerHTML = `R${rate}`
         
-        // Now you can use the 'rate' variable as needed
+
         console.log("Rate:", rate);
-        
-        // Send the rate value via AJAX to process.php
+
         $.ajax({
             type: 'POST',
             url: 'process.php',
@@ -165,16 +160,15 @@ function getShippingRates() {
         
     })
     .catch(error => {
-        // Handle errors here
+
         console.error("Error:", error);
     });
     
 }
 
-// Call getShippingRates initially
+
 getShippingRates();
 
-// Set interval to call getShippingRates every 5 seconds
 setInterval(getShippingRates, 5000);
 
 </script>
