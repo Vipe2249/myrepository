@@ -3,18 +3,14 @@ session_start();
 
 require_once('../db/dbcon.php');
 
-// Function to remove an item from the cart by SKU
 function removeItemFromCart($sku, $con) {
     if(isset($_SESSION['cart'][$sku])) {
         unset($_SESSION['cart'][$sku]);
     }
 }
 
-// Check if 'remove-from-cart' parameter is present in the URL
 if(isset($_GET['remove-from-cart'])) {
-    // Get the SKU of the product to remove from cart
     $product_sku = $_GET['remove-from-cart'];
-    // Call the function to remove the item from the cart
     removeItemFromCart($product_sku, $con);
 }
 
@@ -22,7 +18,6 @@ $total_quantity = 0;
 $total_price = 0; 
 if(isset($_SESSION['cart'])) {
     foreach($_SESSION['cart'] as $sku => $item) {
-        // Fetch additional attributes (L, W, H, KG) from the database based on SKU
         $query = "SELECT L, W, H, KG FROM Products WHERE SKU = ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $sku);
@@ -30,14 +25,13 @@ if(isset($_SESSION['cart'])) {
         $result = $stmt->get_result();
         $product = $result->fetch_assoc();
 
-        // Calculate total quantity and price
         $total_quantity += $item['quantity'];
         $total_price += ($item['quantity'] * $item['price']);
     }
 }
 
-$stmt->close(); // Close the prepared statement
-$con->close(); // Close the database connection
+$stmt->close(); 
+$con->close(); 
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +66,6 @@ $con->close(); // Close the database connection
                                 echo '<td>';
                                 echo '<div class="cart-details" style="display: flex;">';
                                 echo '<div class="cart-thumbnail" style="display: flex;">';
-                                // Check if 'image_url' key exists for the current product
                                 if(isset($item['image_url'])) {
                                     echo '<img style="height: 100px; width: 100px;" src="' . $item['image_url'] . '" alt="">';
                                 } else {
