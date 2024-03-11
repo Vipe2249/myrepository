@@ -2,27 +2,27 @@
 session_start();
 require_once('../db/dbcon.php');
 
-// Function to remove an item from the cart by SKU
+
 function removeItemFromCart($sku) {
     if(isset($_SESSION['cart'][$sku])) {
         unset($_SESSION['cart'][$sku]);
     }
 }
 
-// Check if 'remove-from-cart' parameter is present in the URL
+
 if(isset($_GET['remove-from-cart'])) {
-    // Get the SKU of the product to remove from cart
+
     $product_sku = $_GET['remove-from-cart'];
-    // Call the function to remove the item from the cart
+
     removeItemFromCart($product_sku);
 }
 
 $total_quantity = 0;
 $total_price = 0;
-$parcels = []; // Initialize the parcels array
+$parcels = []; 
 if(isset($_SESSION['cart'])) {
     foreach($_SESSION['cart'] as $sku => $item) {
-        // Fetch additional attributes (L, W, H, KG) from the database based on SKU
+
         $query = "SELECT L, W, H, KG FROM Products WHERE SKU = ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $sku);
@@ -32,7 +32,6 @@ if(isset($_SESSION['cart'])) {
         $total_quantity += $item['quantity'];
         $total_price += ($item['quantity'] * $item['price']);
 
-        // Create a new parcel for each quantity of the product
         for ($i = 0; $i < $item['quantity']; $i++) {
             $parcel = array(
                 'submitted_length_cm' => $product['L'],
@@ -40,10 +39,10 @@ if(isset($_SESSION['cart'])) {
                 'submitted_height_cm' => $product['H'],
                 'submitted_weight_kg' => $product['KG']
             );
-            $parcels[] = $parcel; // Add the parcel to the parcels array
+            $parcels[] = $parcel;
         }
 
-        // Output fetched attributes (optional)
+
     }
 }
 ?>
@@ -181,7 +180,7 @@ if(isset($_SESSION['cart'])) {
     function getShippingRates() {
         const formData = getFormData();
         const apiUrl = "https://api.shiplogic.com/v2/rates";
-        const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; // Change this to your actual bearer token
+        const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; 
 
         fetch(apiUrl, {
             method: "POST",
@@ -193,17 +192,17 @@ if(isset($_SESSION['cart'])) {
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response data here
+
             console.log(data);
 
-            // Extract the rate from the response
-            const rate = data.rates[0].rate; // Assuming there's only one rate in the array
+
+            const rate = data.rates[0].rate; 
             document.querySelector(".summary-shipping").innerHTML = `R${rate}`
             
-            // Now you can use the 'rate' variable as needed
+
             console.log("Rate:", rate);
             
-            // Send the rate value via AJAX to process.php
+
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/infinityware/php/process.php',
@@ -215,21 +214,20 @@ if(isset($_SESSION['cart'])) {
         })
         
         .catch(error => {
-            // Handle errors here
+
             console.error("Error:", error);
         });
     }
 
-    // Call getShippingRates initially
+
     getShippingRates();
 
-    // Set interval to call getShippingRates every 5 seconds
     setInterval(getShippingRates, 1000);
 
     function getTotalRates() {
         const formData = getFormData();
         const apiUrl = "https://api.shiplogic.com/v2/rates";
-        const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; // Change this to your actual bearer token
+        const bearerToken = "a601d99c75fc4c64b5a64288f97d52b4"; 
 
         fetch(apiUrl, {
             method: "POST",
@@ -241,17 +239,16 @@ if(isset($_SESSION['cart'])) {
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response data here
+
             console.log(data);
 
-            // Extract the rate from the response
-            const rate = data.rates[0].rate; // Assuming there's only one rate in the array
+            const rate = data.rates[0].rate; 
             document.querySelector(".summary-shipping").innerHTML = `R${rate}`
             
-            // Now you can use the 'rate' variable as needed
+
             console.log("Rate:", rate);
             
-            // Send the rate value via AJAX to process.php
+
             $.ajax({
                 type: 'POST',
                 url: '/infinityware/php/total.php',
@@ -263,16 +260,16 @@ if(isset($_SESSION['cart'])) {
         })
         
         .catch(error => {
-            // Handle errors here
+
             console.error("Error:", error);
         });
 
     }
 
-    // Call getTotalRates initially
+
     getTotalRates();
 
-    // Set interval to call getTotalRates every 5 seconds
+
     setInterval(getTotalRates, 1000);
 </script>
 </body>
