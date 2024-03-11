@@ -1,20 +1,18 @@
 RewriteEngine On
 
-# Set the base directory if your site is not in the root directory
-# RewriteBase /
 
-# Remove the .php extension from URLs
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/?$ php/$1.php [L]
 
-# Redirect requests from old URLs to new URLs
+
 RewriteRule ^old-page$ new-page [R=301,L]
 
-# Redirect requests from a specific directory to another directory
+
 RewriteRule ^old-directory/(.*)$ new-directory/$1 [R=301,L]
 
-# Rewrite requests for pages with numeric IDs to a single script
+
 RewriteRule ^page/([0-9]+)$ handler.php?id=$1 [QSA,L]
 
 RewriteRule ^product/([a-zA-Z0-9_-]+)$ php/product.php?url=$1 [QSA,L]
