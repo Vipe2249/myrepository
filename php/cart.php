@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-// Function to remove an item from the cart by SKU
 function removeItemFromCart($con, $sku) {
-    // Sanitize input
+
     $product_sku = mysqli_real_escape_string($con, $sku);
     
     if(isset($_SESSION['cart'][$product_sku])) {
@@ -13,11 +12,10 @@ function removeItemFromCart($con, $sku) {
 
 require_once('../db/dbcon.php');
 
-// Check if 'remove-from-cart' parameter is present in the URL
 if(isset($_GET['remove-from-cart'])) {
-    // Get the SKU of the product to remove from cart
+
     $product_sku = $_GET['remove-from-cart'];
-    // Call the function to remove the item from the cart
+
     removeItemFromCart($con, $product_sku);
 }
 
