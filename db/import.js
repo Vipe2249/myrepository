@@ -1,5 +1,5 @@
 function sendDataToServer(products) {
-    // AJAX request to send data to the server
+
     $.ajax({
         type: 'POST',
         url: '../db/insert_data.php',
@@ -40,7 +40,7 @@ function parseXML(xml) {
                 url: url
             };
 
-            // Log the URL here
+
             console.log('URL:', url);
 
             products.push(product);
@@ -58,11 +58,11 @@ function parseXML(xml) {
 
 
 
-// Function to read the XML file
+
 function readFile() {
     $.ajax({
         type: "GET",
-        url: "../db/feedhandler.xml", // Replace 'feedhandler.xml' with your XML file path
+        url: "../db/feedhandler.xml", 
         dataType: "xml",
         success: function(xml) {
             parseXML(xml);
